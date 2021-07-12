@@ -1,17 +1,44 @@
 <template>
-  <div class="container">
-    <div class="row">
-      <button @click="makePayment">Pay</button>
+  <div>
+    <div>
+      <!-- <button @click="makePayment">Pay</button> -->
+      <about />
     </div>
   </div>
 </template>
 <script>
+import About from "./About.vue";
+import axios from "axios";
 export default {
+  components: {
+    about: () => import("./About.vue"),
+  },
   data() {
-    return {};
+    return {
+      axios: axios,
+    };
   },
   methods: {
     makePayment(e) {
+      this.axios.post(
+        "https://api.razorpay.com/v1/orders",
+        {
+          amount: 1000000,
+          currency: "INR",
+          receipt: "Receipt no. 1",
+          payment_capture: 1,
+          notes: {
+            notes_key_1: "Tea, Earl Grey, Hot",
+            notes_key_2: "Tea, Earl Grey… decaf.",
+          },
+        },
+        {
+          auth: {
+            username: "rzp_test_buSe3lz98IWBl7",
+            password: "rzp_test_buSe3lz98IWBl7",
+          },
+        }
+      );
       let rzp1 = new Razorpay(this.createObj());
       rzp1.on("payment.failed", function (response) {
         alert(response.error.code);
